@@ -4,9 +4,9 @@ const bodyParser = require("body-parser");
 const app = express();
 const User = require("./models/User");
 const Post = require("./models/Post");
+const keys = require("./config/keys");
 
-const db =
-  "mongodb+srv://manishdb:gumber@cluster0-zrbb5.mongodb.net/test?retryWrites=true&w=majority";
+const db = keys.mongoURI;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -20,7 +20,6 @@ app.get("/", (req, res) =>
     msg: "Hello Manish!!"
   })
 );
-
 
 app.post("/users", (req, res) => {
     const newUser = new User(({
