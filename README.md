@@ -11,3 +11,4 @@ A social network platform
 2. [express](https://expressjs.com) - Nodejs framework for building web and api applications.
 3. [mongoose](https://mongoosejs.com) - For data models
 4. [nodemon](https://www.npmjs.com/package/nodemon) - For automatic restart
+5. [passport-jwt]

@@ -5,6 +5,7 @@ const app = express();
 const User = require("./models/User");
 const Post = require("./models/Post");
 const keys = require("./config/keys");
+const passport = require('passport');
 
 const db = keys.mongoURI;
 
@@ -15,11 +16,17 @@ mongoose
   .then(() => console.log("Db Connected"))
   .catch(err => console.log(err));
 
+app.use(passport.initialize());
+require('./config/passport')(passport);
+
+
 app.get("/", (req, res) =>
   res.json({
     msg: "Hello Manish Gumber!!"
   })
 );
+
+app.use('/users', passport.authenticate('jwt',{session:false}, User));
 
 app.post("/users", (req, res) => {
     const newUser = new User(({
@@ -41,13 +48,13 @@ app.get('/users', (req, res) => {
       .catch(err => console.log(err))
 });
 
+app.use('/posts', passport.authenticate('jwt',{session:false}, Post));
+
 app.post("/posts", (req, res) => {
 
   User.findOne({email: req.body.email})
   .then(user => {
-    
-        //console.log("User found", user.email);
-
+  
         if(user){
 
           const newPost = new Post(({
@@ -86,6 +93,7 @@ app.get('/posts', (req, res) => {
 
 
 const port = process.env.PORT || 5000;
+
 app.listen(port, () =>
   console.log(`Your application is running @ http://localhost:${port}`)
 );
