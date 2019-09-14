@@ -17,7 +17,7 @@ mongoose
 
 app.get("/", (req, res) =>
   res.json({
-    msg: "Hello Manish!!"
+    msg: "Hello Manish Gumber!!"
   })
 );
 
