@@ -22,11 +22,11 @@ require('./config/passport')(passport);
 
 app.get("/", (req, res) =>
   res.json({
-    msg: "Hello Manish Gumber !!"
+    msg: "Hello Manish Gumber!!"
   })
 );
 
-app.use('/users', passport.authenticate('jwt',{session:false}, User));
+//app.use('/users', passport.authenticate('jwt',{session:false}, User));
 
 app.post("/users", (req, res) => {
     const newUser = new User(({
@@ -48,7 +48,10 @@ app.get('/users', (req, res) => {
       .catch(err => console.log(err))
 });
 
-app.use('/posts', passport.authenticate('jwt',{session:false}, Post));
+const authRoutes = require('./routes/Auth');
+app.use('/auth', authRoutes);
+
+app.use('/posts', passport.authenticate('jwt',{session:false}));
 
 app.post("/posts", (req, res) => {
 
