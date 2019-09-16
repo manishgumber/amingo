@@ -1,9 +1,10 @@
 const express = require('express');
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
 
 const router = express.Router();
 
-router.post('/register', (req, res) =>{
+router.post('/register', (req, res) => {
 
     User.findOne({email:req.body.email})   
     .then(user=> {
@@ -19,14 +20,27 @@ router.post('/register', (req, res) =>{
                 occupation: req.body.occupation
             })
         
-            newUser
-                .save()
-                .then(user=> {
-                    res.json(user)
-                })
-                .catch(err=> {
-                    res.json(err)
-                })
+            bcrypt.genSalt((err, salt) => {
+
+                bcrypt.hash(newUser.password, salt, (err, hash) => {
+                    newUser.password = hash;
+                    newUser
+                        .save()
+                        .then(user => res.json(user))
+                        .catch(err => console.log(err));
+                });
+                
+            });
+
+
+            // newUser
+            //     .save()
+            //     .then(user=> {
+            //         res.json(user)
+            //     })
+            //     .catch(err=> {
+            //         res.json(err)
+            //     })
 
         }
         
