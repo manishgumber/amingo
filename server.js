@@ -26,21 +26,16 @@ app.get("/", (req, res) =>
   })
 );
 
-//app.use('/users', passport.authenticate('jwt',{session:false}, User));
+//AUTH ROUTES //////////////////////////////////////////////////////////
 
-app.post("/users", (req, res) => {
-    const newUser = new User(({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password
-    }))
+const authRoutes = require('./routes/Auth');
+app.use('/auth', authRoutes);
 
-    newUser
-    .save()
-    .then (user => res.json(user))
-    .catch(err=> console.log(err))
-    
-});
+/////////////////////////////////////////////////////////////////////////
+
+
+//USERS ROUTES /////////////////////////////////////////////////////////
+app.use('/users', passport.authenticate('jwt',{session:false}));
 
 app.get('/users', (req, res) => {
   User.find()
@@ -48,10 +43,18 @@ app.get('/users', (req, res) => {
       .catch(err => console.log(err))
 });
 
-const authRoutes = require('./routes/Auth');
-app.use('/auth', authRoutes);
+/////////////////////////////////////////////////////////////////////////
 
+
+//POSTS ROUTES //////////////////////////////////////////////////////////
 app.use('/posts', passport.authenticate('jwt',{session:false}));
+
+app.get('/posts', (req, res) => {
+  Post
+      .find()
+      .then(posts => res.json(posts))
+      .catch(err => res.json(err))
+});
 
 app.post("/posts", (req, res) => {
 
@@ -80,23 +83,35 @@ app.post("/posts", (req, res) => {
 
 });
 
-app.get('/posts', (req, res) => {
-    Post
-        .find()
-        .then(posts => res.json(posts))
-        .catch(err => res.json(err))
-  });
-
-  app.get('/getByEmail', (req, res) => {
-    User
-        .find({email: req.body.email})
-        .then(users => res.json(users))
-        .catch(err => res.json(err))
-  });
-
-
 const port = process.env.PORT || 5000;
 
 app.listen(port, () =>
   console.log(`Your application is running @ http://localhost:${port}`)
 );
+
+/////////////////////////////////////////////////////////////////////////
+
+/* app.post("/users", (req, res) => {
+    const newUser = new User(({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password
+    }))
+
+    newUser
+    .save()
+    .then (user => res.json(user))
+    .catch(err=> console.log(err))
+    
+});
+
+
+app.get('/getByEmail', (req, res) => {
+  User
+      .find({email: req.body.email})
+      .then(users => res.json(users))
+      .catch(err => res.json(err))
+}); */
+
+
+
